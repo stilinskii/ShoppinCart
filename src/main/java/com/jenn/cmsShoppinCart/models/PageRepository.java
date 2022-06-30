@@ -8,6 +8,6 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface PageRepository extends JpaRepository<Page, Integer> {
     //CrudRepository < PagingAndSortingRepository < JpaRepository
-
+    Page findBySlug(String slug);
 
 }
