@@ -47,7 +47,8 @@ public class AdminPagesController {
 
         String slug = page.getSlug() == "" ? page.getTitle().toLowerCase().replace(" ","-"):page.getSlug().toLowerCase().replace(" ","-");
 
-        if(pageRepo.findBySlug(slug)!=null){
+        Page pageExists = pageRepo.findBySlug(slug);
+        if(pageExists !=null){
             log.info("log exists access");
             redirectAttributes.addFlashAttribute("message","Slug exists, choose another");
             redirectAttributes.addFlashAttribute("alertClass","alert-danger");
@@ -103,7 +104,7 @@ public class AdminPagesController {
     }
 
     @GetMapping("/delete/{id}")
-    public String edit(@PathVariable int id, RedirectAttributes redirectAttributes){
+    public String delete(@PathVariable int id, RedirectAttributes redirectAttributes){
         pageRepo.deleteById(id);
         redirectAttributes.addFlashAttribute("message","Page deleted");
         redirectAttributes.addFlashAttribute("alertClass","alert-success");

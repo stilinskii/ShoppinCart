@@ -1,0 +1,86 @@
+
+<!doctype html>
+<html lang="en" class="h-100" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="/fragments/head"></head>
+<body class="d-flex flex-column h-100">
+
+<header>
+    <!-- Fixed navbar -->
+    <nav th:replace="/fragments/nav :: nav-admin" class="navbar navbar-expand-md navbar-dark bg-dark">
+    </nav>
+    <link
+            rel="stylesheet"
+            href="/css/style.css"
+    />
+</header>
+
+<!-- Begin page content -->
+<main class="container">
+    <!-- edit x , pageTitle x = Add a page /edit o , pageTitle o = 수정할때 페이지 이름 지웠다는소리. 원래 페이지 이름 넣어줌
+         / edit o , pageTitle x = 아이디로 찾은 페이지객체의 이름 -->
+    <h1 class="display-2" th:text="${edit}? (${pageTitle}? 'Edit ' + ${pageTitle}:'Edit ' + ${page.title}):_">Add a product</h1>
+    <a href="/admin/products" class="btn btn-primary mb-5">Back to products</a>
+
+    <div th:if="${message}" th:text="${message}" th:class="${'alert '+ alertClass}"></div>
+
+    <form th:action="${edit}? @{/admin/products/edit}:@{/admin/products/add}" method="post" th:object="${product}" enctype="multipart/form-data">
+        <div th:if="${#fields.hasErrors('*')}" class="alert alert-danger">
+            There are errors
+        </div>
+        <div class="form-group">
+            <label for="">Name</label>
+            <input type="text" class="form-control" th:classappend="${#fields.hasErrors('name')} ? 'is-invalid'"  th:field="*{name}" placeholder="Name">
+            <span th:if="${#fields.hasErrors('name')}" th:errors="*{name}" class="error"></span>
+        </div>
+   
+        <!--th:classappend="${message} ? 'is-invalid'" th:field="*{slug}"-->
+        <div class="form-group">
+            <label for="">Description:</label>
+            <textarea th:field="*{description}" class="form-control" th:classappend="${#fields.hasErrors('description')} ? 'is-invalid'" rows="10" placeholder="description"></textarea>
+            <span th:if="${#fields.hasErrors('description')}" th:errors="*{description}" class="error"></span>
+        </div>
+
+        <div class="form-group">
+            <label for="">Image:</label>
+            <input type="file" class="form-control" th:name="file" th:id="file">
+            <img class="mt-2" src="#" alt="" id="imgPreview1">
+        </div>
+        <div class="form-group">
+            <label for="">Price:</label>
+            <input type="text" class="form-control" th:classappend="${#fields.hasErrors('price')} ? 'is-invalid'"  th:field="*{price}" placeholder="20 or 20.99">
+            <span th:if="${#fields.hasErrors('price')}" th:errors="*{price}" class="error"></span>
+        </div>
+        <div class="form-group">
+            <label for="">Category:</label>
+            <select th:field="*{categoryId}" class="form-control">
+                <option th:value="0">Choose a category</option>
+                <option th:each="cat:${categories}" th:value="${cat.id}" th:text="${cat.name}"></option>
+            <span th:if="${#fields.hasErrors('categoryId')}" th:errors="*{categoryId}" class="error"></span>
+                
+            </select>
+        </div>
+
+        <input type="hidden" th:field="*{id}" th:value="${product.id}">
+
+        <button type="submit" class="btn btn-danger mt-3" th:text="${edit}? 'edit':_">add</button>
+    </form>
+
+
+
+    </form>
+
+
+
+
+</main>
+
+<footer th:replace="/fragments/footer"></footer>
+<script>
+    $(function (){
+        $("#file").change(function(){
+            readURL(this,'1');
+        });
+    });
+</script>
+</body>
+</html>
