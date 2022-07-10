@@ -42,6 +42,8 @@ public class AdminCategoriesController {
 
     @PostMapping("/add")
     public String forAddSubmit(@Valid Category category, BindingResult bindingResult, RedirectAttributes redirectAttributes){
+
+
         if(bindingResult.hasErrors()){
             //model.addAttribute("errors",bindingResult); 생략가능
             return "admin/categories/add";
@@ -69,22 +71,24 @@ public class AdminCategoriesController {
     @GetMapping("/edit/{id}")
     public String edit(@PathVariable int id, Model model){
         model.addAttribute("category",categoryRepo.findById(id).get());
-        model.addAttribute("edit",true);
-        return "admin/categories/add";
+
+        return "admin/categories/edit";
     }
 
     @PostMapping("/edit")
     public String forEditSubmit(@Valid Category category, BindingResult bindingResult,Model model, RedirectAttributes redirectAttributes){
+
         Category categoryCurrent = categoryRepo.findById(category.getId()).get();
+
         if(bindingResult.hasErrors()){
             //model.addAttribute("errors",bindingResult); 생략가능
-            model.addAttribute("edit",true);
             //카테고리 이름이 지워져도 페이지 제목에 원래 수정하려했던 페이지 이름 표시
             model.addAttribute("categoryName",categoryCurrent.getName());
-            return "admin/categories/add";
+            return "admin/categories/edit";
         }
         // duplicate check , 아이디는 다른데 같은 이름이 있으면 오류보내기
         Category duplicateChk = categoryRepo.findByNameAndIdNot(category.getName(), category.getId());
+            String slug = category.getName().toLowerCase().replace(" ","-");
         if(duplicateChk!=null){
             redirectAttributes.addFlashAttribute("message","Category exists, choose another");
             redirectAttributes.addFlashAttribute("alertClass","alert-danger");
@@ -92,7 +96,6 @@ public class AdminCategoriesController {
             //성공로직
             redirectAttributes.addFlashAttribute("message","Category edited");
             redirectAttributes.addFlashAttribute("alertClass","alert-success");
-            String slug = category.getName().toLowerCase().replace(" ","-");
             category.setSlug(slug);
             categoryRepo.save(category);
         }

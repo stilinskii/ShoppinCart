@@ -67,8 +67,8 @@ public class AdminPagesController {
     public String editForm(@PathVariable int id,Model model){
         log.info("member sorting={}",pageRepo.findById(id).get().getSorting());
         model.addAttribute("page",pageRepo.findById(id).get());
-        model.addAttribute("edit",true);
-        return "admin/pages/add";
+
+        return "admin/pages/edit";
     }
 
     @PostMapping("/edit")
@@ -77,11 +77,13 @@ public class AdminPagesController {
         Page pageCurrent = pageRepo.getOne(page.getId());
 
         if(bindingResult.hasErrors()){
-            model.addAttribute("errors",bindingResult);
+
             model.addAttribute("pageTitle",pageCurrent.getTitle());
-            model.addAttribute("edit",true);
-            return "admin/pages/add";
+
+            return "admin/pages/edit";
         }
+
+        //이게 여기 위치하는게 좋은건지 성공로직에 포함되어야 좋은건지(else) 모르겠음 근데 아마 실패로직 따로 분리 필요 TODO
         redirectAttributes.addFlashAttribute("message","Page edited");
         redirectAttributes.addFlashAttribute("alertClass","alert-success");
 
