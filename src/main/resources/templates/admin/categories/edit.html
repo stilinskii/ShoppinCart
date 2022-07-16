@@ -26,8 +26,8 @@
                 <span class="error" th:if="${#fields.hasErrors('name')}" th:errors="*{name}"></span>
             </div>
 
-            <input type="hidden" th:field="*{id}" th:value="${category.id}">
-            <input type="hidden" th:field="*{sorting}" th:value="${category.sorting}">
+            <input type="hidden" th:field="*{id}" >
+            <input type="hidden" th:field="*{sorting}" >
 
             <button class="btn btn-danger mb-5">Edit</button>
 

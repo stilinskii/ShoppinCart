@@ -137,5 +137,81 @@ public class AdminProductsController {
     }
 
 
+    @PostMapping("/edit")
+    public String edit(@Valid @ModelAttribute("product") Product product,
+                               BindingResult bindingResult,
+                               MultipartFile file,
+                               RedirectAttributes redirectAttributes,
+                               Model model) throws IOException {
+
+
+        Product currentProduct = productRepo.getOne(product.getId());
+        List<Category> categories = categoryRepo.findAll();
+
+        //Model is for category
+        if(bindingResult.hasErrors()){
+            //bindingResult.reject("product");
+            model.addAttribute("productName",currentProduct.getName());
+            model.addAttribute("categories",categories);
+            return "admin/products/edit";
+        }
+
+
+        //I think there's another better way of doing this. TODO
+        boolean fileOK = false;
+        byte[] bytes = file.getBytes();
+        String filename = file.getOriginalFilename();
+        Path path = Paths.get("src/main/resources/static/media/" + filename);
+
+        //수정할 이미지를 넣었을 경우
+        if(!file.isEmpty()){
+            if(filename.endsWith("jpg") || filename.endsWith("png")){
+                fileOK = true;
+            }
+        } else {
+            fileOK=true;
+        }
+
+
+        redirectAttributes.addFlashAttribute("message","Product edited");
+        redirectAttributes.addFlashAttribute("alertClass","alert-success");
+
+        String slug = product.getName().toLowerCase().replace(" ","-");
+        //다른아이디로 이미 같은 이름의 slug가 있는지 확인
+        Product slugExists = productRepo.findBySlugAndIdNot(slug,product.getId());
+        if(! fileOK){
+            redirectAttributes.addFlashAttribute("message","Image must be a jpg or png");
+            redirectAttributes.addFlashAttribute("alertClass","alert-danger");
+            redirectAttributes.addFlashAttribute("product",product);
+
+        }else if(slugExists != null){
+            redirectAttributes.addFlashAttribute("message","Product exists, choose another");
+            redirectAttributes.addFlashAttribute("alertClass","alert-danger");
+            redirectAttributes.addFlashAttribute("product",product);
+        }else{
+
+            //성공로직
+            product.setSlug(slug);
+
+            //delete the current image if new image is inputed
+            if(!file.isEmpty()){
+                Path pathNew = Paths.get("src/main/resources/static/media/" + currentProduct.getImage());
+                Files.delete(pathNew);
+                product.setImage(filename);
+                //save image to local
+                Files.write(path, bytes);
+            }else{
+                product.setImage(currentProduct.getImage());
+            }
+
+            productRepo.save(product);
+
+
+
+        }
+
+        return "redirect:/admin/products/edit/" + product.getId();
+    }
+
 
 }
