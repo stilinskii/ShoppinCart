@@ -157,7 +157,7 @@ public class AdminProductsController {
         }
 
 
-        //I think there's another better way of doing this. TODO
+        //I think there's other better way of doing this. TODO
         boolean fileOK = false;
         byte[] bytes = file.getBytes();
         String filename = file.getOriginalFilename();
@@ -195,8 +195,8 @@ public class AdminProductsController {
 
             //delete the current image if new image is inputed
             if(!file.isEmpty()){
-                Path pathNew = Paths.get("src/main/resources/static/media/" + currentProduct.getImage());
-                Files.delete(pathNew);
+                Path pathOld = Paths.get("src/main/resources/static/media/" + currentProduct.getImage());
+                Files.delete(pathOld);
                 product.setImage(filename);
                 //save image to local
                 Files.write(path, bytes);
@@ -213,5 +213,16 @@ public class AdminProductsController {
         return "redirect:/admin/products/edit/" + product.getId();
     }
 
+    @GetMapping("/delete/{id}")
+    public String delete(@PathVariable int id, RedirectAttributes redirectAttributes) throws IOException {
+        Product one = productRepo.getOne(id);
+        Path path = Paths.get("src/main/resources/static/media/" + one.getImage());
+        Files.delete(path);
+        productRepo.deleteById(id);
 
+        redirectAttributes.addFlashAttribute("message","Page deleted");
+        redirectAttributes.addFlashAttribute("alertClass","alert-success");
+
+        return "redirect:/admin/products";
+    }
 }

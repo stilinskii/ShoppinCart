@@ -4,6 +4,7 @@ $(function () {
   });
 });
 
+//form 이미지 미리보기
 function readURL(input, idNum) {
   if (input.files && input.files[0]) {
     let reader = new FileReader();
