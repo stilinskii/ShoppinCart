@@ -6,6 +6,9 @@ import com.jenn.cmsShoppinCart.models.data.Category;
 import com.jenn.cmsShoppinCart.models.data.Product;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -30,8 +33,13 @@ public class AdminProductsController {
     private final CategoryRepository categoryRepo;
 
     @GetMapping
-    public String index(Model model){
-        List<Product> products = productRepo.findAll();
+    public String index(Model model, @RequestParam(value = "page", required = false) Integer p){
+
+        int perPage = 3;
+        int page = (p !=null) ? p : 0;
+        Pageable pageable = PageRequest.of(page, perPage);
+
+        Page<Product> products = productRepo.findAll(pageable);
         List<Category> categories = categoryRepo.findAll();
 
         HashMap<Integer, String> cats = new HashMap<>();
@@ -41,6 +49,14 @@ public class AdminProductsController {
 
         model.addAttribute("products",products);
         model.addAttribute("cats",cats);
+
+        Long count = productRepo.count();
+        double pageCount = Math.ceil((double) count/(double) perPage);
+
+        model.addAttribute("pageCount",(int)pageCount); // end page
+        model.addAttribute("perPage",perPage);
+        model.addAttribute("count",count);
+        model.addAttribute("page",page); // start page
 
         return "admin/products/index";
     }
