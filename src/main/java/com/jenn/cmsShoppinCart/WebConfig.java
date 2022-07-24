@@ -8,10 +8,10 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 @Configuration
 public class WebConfig implements WebMvcConfigurer {
 
-    @Override
-    public void addViewControllers(ViewControllerRegistry registry) {
-        registry.addViewController("/").setViewName("home");
-    }
+//    @Override
+//    public void addViewControllers(ViewControllerRegistry registry) {
+//        registry.addViewController("/").setViewName("home");
+//    }
 
     //이걸 안해주면 사진을 올렸을때 새로고침 안하면 사진을 못불러온다.
     //사진이 추가되었지만 static은 정적인 애들이 있는곳이라서 바로바로 불러올 수 없음.

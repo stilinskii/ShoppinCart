@@ -12,4 +12,6 @@ public interface CategoryRepository extends JpaRepository<Category,Integer> {
     Category findByNameAndIdNot(String name,int id);
 
     List<Category> findAllByOrderBySortingAsc();
+
+    Category findBySlug(String slug);
 }

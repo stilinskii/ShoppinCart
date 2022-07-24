@@ -11,11 +11,12 @@
 </header>
 
 <!-- Begin page content -->
-<main class="container">
+<main class="container-fluid mt-5">
     <div class="row">
-        <div class="col">
-        <h1>Spring boot2</h1>
-        </div>
+        <div th:replace="/fragments/categories"></div>
+        <div class="col"></div>
+        <div class="col-7" th:utext="${page.content}"></div>
+        <div class="col"></div>
     </div>
 </main>
 
