@@ -75,7 +75,6 @@ public class CartController {
             return "redirect:/cart/view";
         }
 
-
         return "cart_view";
     }
 
@@ -115,6 +114,34 @@ public class CartController {
         model.addAttribute("notCartViewPage",true);
 
         return "cart";
+    }
+
+    @GetMapping("/remove/{id}")
+    public String remove(@PathVariable int id, HttpSession session, Model model, HttpServletRequest httpServletRequest){
+
+        HashMap<Integer,Cart> cart = (HashMap<Integer, Cart>) session.getAttribute("cart");
+        cart.remove(id);
+        if(cart.size() == 0){
+            session.removeAttribute("cart");
+        }
+
+        String refererLink = httpServletRequest.getHeader("referer");
+        log.info("referlInk={}",refererLink);//http://localhost:8081/cart/view 뭐지 이렇게되면 의미없지않나
+
+        return "redirect:"+refererLink;
+
+    }
+
+    @GetMapping("/clear")
+    public String clear(HttpSession session, HttpServletRequest httpServletRequest){
+
+        session.removeAttribute("cart");
+
+        String refererLink = httpServletRequest.getHeader("referer");
+        log.info("referlInk={}",refererLink);//http://localhost:8081/cart/view 뭐지 이렇게되면 의미없지않나
+
+        return "redirect:"+refererLink;
+
     }
 
 
