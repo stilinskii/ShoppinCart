@@ -138,7 +138,7 @@ public class CartController {
         session.removeAttribute("cart");
 
         String refererLink = httpServletRequest.getHeader("referer");
-        log.info("referlInk={}",refererLink);//http://localhost:8081/cart/view 뭐지 이렇게되면 의미없지않나
+        log.info("referlInk={}",refererLink);
 
         return "redirect:"+refererLink;
 
