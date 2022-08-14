@@ -33,4 +33,9 @@ public class PagesController {
         return "page";
     }
 
+    @GetMapping("/login")
+    public String login(){
+        return "login";
+    }
+
 }

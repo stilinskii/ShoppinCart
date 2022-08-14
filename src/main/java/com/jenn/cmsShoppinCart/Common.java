@@ -5,16 +5,19 @@ import com.jenn.cmsShoppinCart.models.PageRepository;
 import com.jenn.cmsShoppinCart.models.data.Cart;
 import com.jenn.cmsShoppinCart.models.data.Category;
 import com.jenn.cmsShoppinCart.models.data.Page;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ModelAttribute;
 
 import javax.servlet.http.HttpSession;
+import java.security.Principal;
 import java.util.HashMap;
 import java.util.List;
 
 //intercepter 적용. 다른 메서드전에 이거 호출
+@Slf4j
 @ControllerAdvice
 public class Common {
     @Autowired
@@ -24,7 +27,15 @@ public class Common {
     private CategoryRepository categoryRepo;
 
     @ModelAttribute
-    public void shareData(Model model, HttpSession session){
+    public void shareData(Model model, HttpSession session, Principal principal){
+        //principal - give a access to the loged-in user
+
+        if(principal != null){
+            model.addAttribute("user",principal.getName());
+            log.info("principal={}",principal.getName());
+        }
+
+
         List<Page> pages = pageRepo.findAll();
 
         List<Category> categories = categoryRepo.findAll();

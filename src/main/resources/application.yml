@@ -1,8 +1,8 @@
-spring:
-    security:
-      user:
-          name: user
-          password: pass
+#spring:
+#    security:
+#      user:
+#          name: user
+#          password: pass
 
 #properties
 #spring.security.user.name= user

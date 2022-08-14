@@ -1,25 +1,25 @@
-
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en" class="h-100" xmlns:th="http://www.thymeleaf.org">
-<head th:replace="/fragments/head"></head>
-<body class="d-flex flex-column h-100">
+  <head th:replace="/fragments/head"></head>
+  <body class="d-flex flex-column h-100">
+    <header>
+      <!-- Fixed navbar -->
+      <nav
+        th:replace="/fragments/nav :: navfront"
+        class="navbar navbar-expand-md navbar-dark bg-dark"
+      ></nav>
+    </header>
 
-<header>
-    <!-- Fixed navbar -->
-    <nav th:replace="/fragments/nav :: nav-front" class="navbar navbar-expand-md navbar-dark bg-dark">
-    </nav>
-</header>
-
-<!-- Begin page content -->
-<main class="container-fluid mt-5">
-    <div class="row">
+    <!-- Begin page content -->
+    <main class="container-fluid mt-5">
+      <div class="row">
         <div th:replace="/fragments/categories"></div>
         <div class="col"></div>
         <div class="col-7" th:utext="${page.content}"></div>
         <div class="col"></div>
-    </div>
-</main>
+      </div>
+    </main>
 
-<footer th:replace="/fragments/footer"></footer>
-</body>
+    <footer th:replace="/fragments/footer"></footer>
+  </body>
 </html>
